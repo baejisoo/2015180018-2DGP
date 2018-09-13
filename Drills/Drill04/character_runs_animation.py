@@ -36,5 +36,6 @@ while(True):
         delay(0.05)
         get_events()
 
+#git id 오류 테스트 커밋
 close_canvas()
 
