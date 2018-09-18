@@ -28,7 +28,7 @@ def make_animation(xPos, yPos, dirX, frame):
 
 def make_routine(now, next):
     xPos, yPos = route[now][0], route[now][1]
-    print(xPos, yPos)
+    #print(xPos, yPos)
     dirX, dirY = make_dir(now, next)
     moveX, moveY = move_by_dir(dirX, dirY)
     #print(moveX, moveY)
