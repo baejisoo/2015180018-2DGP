@@ -3,7 +3,7 @@ from pico2d import *
 open_canvas()
 
 grass = load_image('grass.png')
-character = load_image('character.png')
+character = load_image('animation_sheet.png')
 
 # 여기를 채우세요.
 
@@ -18,10 +18,9 @@ def make_dir(now, next):
     return dirX, dirY
 
 def move_by_dir():
-
-
     pass
-def make_animation():
+
+def make_animation(xPos, yPos, dirX, frame):
     pass
 
 def make_routine(now, next):
@@ -32,6 +31,7 @@ def make_routine(now, next):
     moveY = dirY * 0.1
     print( moveX, moveY)
     cnt = 0
+    frame = 0
     while cnt < 10:
         clear_canvas()
         grass.draw(400,30)
@@ -40,11 +40,12 @@ def make_routine(now, next):
         print(xPos, yPos)
         cnt += 1
         #character.clip_draw(100, 100, 100, 100, 400, 300)
-        character.draw_now(xPos, yPos)
+        #character.draw_now(xPos, yPos)
+        #make_animation(xPos, yPos, dirX, frame)
+        frame = (frame + 1) % 8
         update_canvas()
         delay(0.1)
-    move_by_dir()
-    make_animation()
+
     pass
 
 idx = 0
