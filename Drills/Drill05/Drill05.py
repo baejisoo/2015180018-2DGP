@@ -21,7 +21,10 @@ def move_by_dir():
     pass
 
 def make_animation(xPos, yPos, dirX, frame):
-    pass
+    if(dirX < 0):
+        character.clip_draw(100 * frame, 0, 100, 100, xPos, yPos)
+    else:
+        character.clip_draw(100 * frame, 100, 100, 100, xPos, yPos)
 
 def make_routine(now, next):
     xPos, yPos = route[now][0], route[now][1]
@@ -41,7 +44,7 @@ def make_routine(now, next):
         cnt += 1
         #character.clip_draw(100, 100, 100, 100, 400, 300)
         #character.draw_now(xPos, yPos)
-        #make_animation(xPos, yPos, dirX, frame)
+        make_animation(xPos, yPos, dirX, frame)
         frame = (frame + 1) % 8
         update_canvas()
         delay(0.1)
