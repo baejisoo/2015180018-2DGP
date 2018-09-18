@@ -47,8 +47,17 @@ def make_routine(now, next):
     make_animation()
     pass
 
+idx = 0
+final = len(route)
 while True:
-    make_routine(0, 1)
+
+    if(idx < len(route) - 1):
+        make_routine(idx, idx + 1)
+        idx += 1
+    elif(idx == len(route) - 1):
+        make_routine(idx, 0)
+        idx = 0
+
 
 close_canvas()
 
