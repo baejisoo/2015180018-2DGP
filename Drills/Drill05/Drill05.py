@@ -17,8 +17,8 @@ def make_dir(now, next):
     dirY = route[next][1] - route[now][1]
     return dirX, dirY
 
-def move_by_dir():
-    pass
+def move_by_dir(dirX, dirY):
+    return dirX * 0.1, dirY * 0.1
 
 def make_animation(xPos, yPos, dirX, frame):
     if(dirX < 0):
@@ -30,9 +30,8 @@ def make_routine(now, next):
     xPos, yPos = route[now][0], route[now][1]
     print(xPos, yPos)
     dirX, dirY = make_dir(now, next)
-    moveX = dirX * 0.1
-    moveY = dirY * 0.1
-    print( moveX, moveY)
+    moveX, moveY = move_by_dir(dirX, dirY)
+    #print(moveX, moveY)
     cnt = 0
     frame = 0
     while cnt < 10:
@@ -48,8 +47,6 @@ def make_routine(now, next):
         frame = (frame + 1) % 8
         update_canvas()
         delay(0.1)
-
-    pass
 
 idx = 0
 final = len(route)
