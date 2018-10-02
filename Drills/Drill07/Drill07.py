@@ -22,6 +22,10 @@ running = True
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 frame = 0
 
+size = 4
+n = 1
+points = [(random.randint(- (KPU_WIDTH // 2), KPU_WIDTH // 2), random.randint(-(KPU_HEIGHT // 2), KPU_HEIGHT // 2)) for i in range(size)]
+
 while running:
     clear_canvas()
     kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
