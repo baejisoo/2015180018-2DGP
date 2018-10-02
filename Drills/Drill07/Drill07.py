@@ -25,18 +25,28 @@ x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 def move_character(p1, p2):
     for i in range(0, 100 + 1, 2):
         frame = 0
+        dir = 0
+        if(p1[0]-p2[0] > 0):
+            dir = 0
+
+        if(p1[0] - p2[0] < 0):
+            dir = 1
+
+        if (p1[0] == p2[0] > 0):
+            pass
+
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
         t = i / 100
         x = (1 - t) * p1[0] + t * p2[0]
         y = (1 - t) * p1[1] + t * p2[1]
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * dir, 100, 100, x, y)
         update_canvas()
         frame = (frame + 1) % 8
         delay(0.05)
 
 
-size = 4
+size = 20
 n = 1
 points = [(random.randint(0, KPU_WIDTH), random.randint(0, KPU_HEIGHT)) for i in range(size)]
 
