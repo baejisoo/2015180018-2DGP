@@ -23,15 +23,14 @@ x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 
 
 def move_character(p1, p2):
+    frame = 0
     for i in range(0, 100 + 1, 2):
-        frame = 0
+        # q방향설정
         dir = 0
         if(p1[0]-p2[0] > 0):
             dir = 0
-
         if(p1[0] - p2[0] < 0):
             dir = 1
-
         if (p1[0] == p2[0] > 0):
             pass
 
