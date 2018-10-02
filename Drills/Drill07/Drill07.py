@@ -29,9 +29,9 @@ running = True
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 frame = 0
 
-size = 10
+size = 4
 n = 1
-points = [(random.randint(- (KPU_WIDTH // 2), KPU_WIDTH // 2), random.randint(-(KPU_HEIGHT // 2), KPU_HEIGHT // 2)) for i in range(size)]
+points = [(random.randint(0, KPU_WIDTH), random.randint(0, KPU_HEIGHT)) for i in range(size)]
 
 
 while running:
@@ -43,7 +43,7 @@ while running:
     update_canvas()
     frame = (frame + 1) % 8
 
-    delay(0.1)
+    delay(1)
     handle_events()
 
 close_canvas()
