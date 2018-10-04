@@ -14,6 +14,9 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
 
+def draw_stamp(p, dir, frame):
+    character.clip_draw(2 * 100, 100 * dir, 100, 100, p[0], p[1])
+
 def draw_curve_3_points(p1, p2, p3):
     for i in range(0, 100, 2):
         t = i / 100
@@ -52,6 +55,14 @@ def move_character(p1, p2, p3):
         character.clip_draw(frame * 100, 100 * dir, 100, 100, x, y)
 
         prevX = x
+
+        if(x, y == p1[0], p1[1]):
+            draw_stamp(p1, dir, frame)
+        elif (x, y == p2[0], p2[1]):
+            draw_stamp(p2, dir, frame)
+        elif (x, y == p3[0], p3[1]):
+            draw_stamp(p3, dir, frame)
+
         update_canvas()
         frame = (frame + 1) % 8
         delay(0.05)
