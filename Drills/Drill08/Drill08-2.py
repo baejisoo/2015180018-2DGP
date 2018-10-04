@@ -28,7 +28,7 @@ character = load_image('animation_sheet.png')
 running = True
 x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 
-def move_character(p1, p2):
+def move_character(p1, p2, p3):
     frame = 0
     for i in range(0, 100 + 1, 2):
         dir = 0
@@ -42,20 +42,19 @@ def move_character(p1, p2):
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
         t = i / 100
-        x = (1 - t) * p1[0] + t * p2[0]
-        y = (1 - t) * p1[1] + t * p2[1]
+        x = (2 * t ** 2 - 3 * t + 1) * p1[0] + (-4 * t ** 2 + 4 * t) * p2[0] + (2 * t ** 2 - t) * p3[0]
+        y = (2 * t ** 2 - 3 * t + 1) * p1[1] + (-4 * t ** 2 + 4 * t) * p2[1] + (2 * t ** 2 - t) * p3[1]
         character.clip_draw(frame * 100, 100 * dir, 100, 100, x, y)
         update_canvas()
         frame = (frame + 1) % 8
         delay(0.05)
 
 
-size = 20
+size = 10
 n = 1
 points = [(random.randint(0, KPU_WIDTH), random.randint(0, KPU_HEIGHT)) for i in range(size)]
 
 while running:
-    move_character(points[n-1], points[n])
-    n = (n + 1) % size
+    move_character(points[0], points[1], points[2])
 
 close_canvas()
