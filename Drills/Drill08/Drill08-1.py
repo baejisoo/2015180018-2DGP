@@ -110,8 +110,9 @@ prepare_turtle_canvas()
 
 points = [(-300, 200), (400, 350), (300, -300), (-200, -200)]
 
-draw_curve_3_points(points[0], points[1], points[2])
-draw_curve_3_points(points[2], points[3], points[0])
+while True:
+    draw_curve_3_points(points[0], points[1], points[2])
+    draw_curve_3_points(points[2], points[3], points[0])
 
 
 turtle.done()
