@@ -56,11 +56,12 @@ def move_character(p1, p2, p3):
 
         prevX = x
 
+
         if(x, y == p1[0], p1[1]):
             draw_stamp(p1, dir, frame)
-        elif (x, y == p2[0], p2[1]):
+        if (x, y == p2[0], p2[1]):
             draw_stamp(p2, dir, frame)
-        elif (x, y == p3[0], p3[1]):
+        if (x, y == p3[0], p3[1]):
             draw_stamp(p3, dir, frame)
 
         update_canvas()
