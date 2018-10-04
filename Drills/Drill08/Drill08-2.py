@@ -32,11 +32,11 @@ def move_character(p1, p2, p3):
     frame = 0
     for i in range(0, 100 + 1, 2):
         dir = 0
-        if(p1[0]-p2[0] > 0):
+        if(p1[0]-p3[0] > 0):
             dir = 0
-        if(p1[0] - p2[0] < 0):
+        if(p1[0] - p3[0] < 0):
             dir = 1
-        if (p1[0] == p2[0] > 0):
+        if (p1[0] == p3[0] > 0):
             pass
 
         clear_canvas()
@@ -56,5 +56,9 @@ points = [(random.randint(0, KPU_WIDTH), random.randint(0, KPU_HEIGHT)) for i in
 
 while running:
     move_character(points[0], points[1], points[2])
-
+    move_character(points[2], points[3], points[4])
+    move_character(points[4], points[5], points[6])
+    move_character(points[6], points[7], points[8])
+    move_character(points[8], points[9], points[0])
+    
 close_canvas()
