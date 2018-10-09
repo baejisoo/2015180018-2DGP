@@ -22,6 +22,19 @@ class Boy:
     def draw(self):
         self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
 
+class Ball:
+    def __init__(self):
+        self.x, self.y = random.randint(100, 700), 599
+        self.speed = random.randint(5,15)
+        self.imageSmall = load_image('ball21x21.png')
+        self.imageBig = load_image('ball41x41.png')
+
+    def update(self):
+        self.y -= self.speed
+
+    def draw(self):
+        self.imageSmall.clip_draw(0, 0, 21, 21, self.x, self.y)
+
 def handle_events():
     global running
     events = get_events()
@@ -35,6 +48,7 @@ def handle_events():
 open_canvas()
 
 team = [Boy() for i in range(11)]
+balls = [Ball() for i in range(21)]
 grass = Grass()
 
 running = True
@@ -45,11 +59,16 @@ while running:
 
     for boy in team:
         boy.update()
+    for ball in balls:
+        ball.update()
 
     clear_canvas()
     grass.draw()
     for boy in team:
         boy.draw()
+    for ball in balls:
+        ball.draw()
+
     update_canvas()
 
     delay(0.05)
