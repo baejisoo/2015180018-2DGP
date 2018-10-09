@@ -36,11 +36,16 @@ class Ball:
                 self.y = 60 + 5
             else:
                 self.y -= self.speed
-
+        else:
+            if (self.y - self.speed <= 60 + 15):
+                self.y = 60 + 5
+            else:
+                self.y -= self.speed
     def draw(self):
         if(self.size == 0):
             self.imageSmall.clip_draw(0, 0, 21, 21, self.x, self.y)
-
+        else:
+            self.imageBig.clip_draw(0, 0, 21, 21, self.x, self.y)
 def handle_events():
     global running
     events = get_events()
