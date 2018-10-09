@@ -26,17 +26,20 @@ class Ball:
     def __init__(self):
         self.x, self.y = random.randint(100, 700), 599
         self.speed = random.randint(5,15)
+        self.size = random.randint(0,1)
         self.imageSmall = load_image('ball21x21.png')
         self.imageBig = load_image('ball41x41.png')
 
     def update(self):
+        if(self.size == 0):
             if (self.y - self.speed <= 60 + 5):
                 self.y = 60 + 5
             else:
                 self.y -= self.speed
 
     def draw(self):
-        self.imageSmall.clip_draw(0, 0, 21, 21, self.x, self.y)
+        if(self.size == 0):
+            self.imageSmall.clip_draw(0, 0, 21, 21, self.x, self.y)
 
 def handle_events():
     global running
