@@ -48,7 +48,7 @@ def update():
     if(pause_time > 1.0):
         pause_time = 0
     delay(0.01)
-    pause_time += 0.01
+    pause_time += 0.05
 
 
 def pause():
