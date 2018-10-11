@@ -2,6 +2,7 @@ import game_framework
 import main_state
 from pico2d import *
 
+import main_state
 
 name = "PauseState"
 image = None
@@ -32,6 +33,9 @@ def draw():
     clear_canvas()
     if(pause_time > 0.5):
         image.draw(400, 300)
+
+    main_state.grass.draw()
+
     update_canvas()
 
 
