@@ -132,7 +132,6 @@ class DashState:
         elif event == LEFT_UP:
             boy.velocity += 1
         boy.dir = boy.velocity
-
     @staticmethod
     def exit(boy, event):
         # fill here
@@ -167,7 +166,8 @@ next_state_table = {
                  SPACE: IdleState,
                  LSHIFT_DOWN: IdleState, LSHIFT_UP: IdleState},
     DashState: {LSHIFT_UP: RunState, RSHIFT_UP: RunState,
-                RIGHT_UP: IdleState, LEFT_UP: IdleState}
+                RIGHT_UP: IdleState, LEFT_UP: IdleState,
+                SPACE: DashState}
 }
 
 class Boy:
