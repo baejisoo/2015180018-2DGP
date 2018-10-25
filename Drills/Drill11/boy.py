@@ -136,7 +136,7 @@ class DashState:
     def exit(boy, event):
         # fill here
         if event == SPACE:
-            boy.fire_ball()
+            boy.dash_fire_ball()
         pass
 
     @staticmethod
@@ -193,6 +193,12 @@ class Boy:
         game_world.add_object(ball, 1)
         pass
 
+    def dash_fire_ball(self):
+        # fill here
+        print('DASH FIRE BALL')
+        ball = Ball(self.x, self.y, self.dir * 15)
+        game_world.add_object(ball, 1)
+        pass
 
 
     def add_event(self, event):
