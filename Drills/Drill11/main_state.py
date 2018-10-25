@@ -3,35 +3,28 @@ import json
 import os
 
 from pico2d import *
-
 import game_framework
-
+import game_world
 
 from boy import Boy
 from grass import Grass
-
+from ball import Ball
 
 
 name = "MainState"
 
 boy = None
 grass = None
-font = None
-
-
 
 def enter():
     global boy, grass
     boy = Boy()
     grass = Grass()
-
+    game_world.add_object(grass, 0)
+    game_world.add_object(boy, 1)
 
 def exit():
-    global boy, grass
-    del boy
-    del grass
-
-
+    game_world.clear()
 
 def pause():
     pass
@@ -52,15 +45,17 @@ def handle_events():
             boy.handle_event(event)
 
 
-
 def update():
-    boy.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
+
 
 def draw():
     clear_canvas()
-    grass.draw()
-    boy.draw()
+    for game_object in game_world.all_objects():
+        game_object.draw()
     update_canvas()
+
 
 
 
