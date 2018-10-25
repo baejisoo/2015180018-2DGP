@@ -144,7 +144,7 @@ class DashState:
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.timer -= 1
-        boy.x += boy.velocity
+        boy.x += boy.velocity * 10
         boy.x = clamp(25, boy.x, 1600 - 25)
 
     @staticmethod
@@ -161,7 +161,8 @@ next_state_table = {
                 LSHIFT_DOWN: IdleState, LSHIFT_UP: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
                SPACE: RunState,
-               LSHIFT_DOWN: DashState, RSHIFT_DOWN: DashState},
+               LSHIFT_DOWN: DashState, RSHIFT_DOWN: DashState,
+               LSHIFT_UP: RunState, RSHIFT_UP: RunState},
     SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState,
                  SPACE: IdleState,
                  LSHIFT_DOWN: IdleState, LSHIFT_UP: IdleState},
