@@ -132,6 +132,8 @@ class DashState:
         elif event == LEFT_UP:
             boy.velocity += 1
         boy.dir = boy.velocity
+        boy.timer = 200
+
     @staticmethod
     def exit(boy, event):
         # fill here
@@ -141,9 +143,12 @@ class DashState:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 8
+        boy.frame = (boy.frame + 10) % 8
         boy.timer -= 1
-        boy.x += boy.velocity * 10
+        if (boy.timer < 0):
+            boy.add_event(DASH_TIMER)
+
+        boy.x += boy.velocity * 3.5
         boy.x = clamp(25, boy.x, 1600 - 25)
 
     @staticmethod
@@ -169,7 +174,9 @@ next_state_table = {
                  RSHIFT_DOWN: IdleState, RSHIFT_UP: IdleState},
     DashState: {LSHIFT_UP: RunState, RSHIFT_UP: RunState,
                 RIGHT_UP: IdleState, LEFT_UP: IdleState,
-                SPACE: DashState}
+                RIGHT_DOWN: IdleState, LEFT_DOWN: IdleState,
+                SPACE: DashState,
+                DASH_TIMER: RunState}
 }
 
 class Boy:
@@ -196,7 +203,7 @@ class Boy:
     def dash_fire_ball(self):
         # fill here
         print('DASH FIRE BALL')
-        ball = Ball(self.x, self.y, self.dir * 15)
+        ball = Ball(self.x, self.y, self.dir * 5)
         game_world.add_object(ball, 1)
         pass
 
