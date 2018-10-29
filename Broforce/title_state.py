@@ -35,9 +35,9 @@ def handle_events():
             elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN) and select_y == 720 // 10 * 3:
                 select_y = 720//10 * 1
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                if(select_y == 720// 10 * 3):
+                if select_y == 720 / 10 * 3:
                     game_framework.change_state(main_state)
-                elif(select_y == 720// 10 * 1):
+                elif select_y == 720 / 10 * 1:
                     game_framework.quit()
 
 def draw():

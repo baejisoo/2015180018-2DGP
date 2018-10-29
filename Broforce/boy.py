@@ -1,5 +1,6 @@
 from pico2d import *
 from ball import Ball
+from gun import Gun
 
 import game_world
 
@@ -24,7 +25,7 @@ key_event_table = {
 
 
 # Boy States
-
+IDLE_RIGHT, IDLE_LEFT, WALK_RIGHT, WALK_LEFT = range(4)
 class IdleState:
 
     @staticmethod
@@ -48,11 +49,12 @@ class IdleState:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 7
+        boy.frame = (boy.frame + 1) % 8
         # fill here
         boy.timer -= 1
         #if boy.timer == 0:
         #    boy.add_event(SLEEP_TIMER)
+
 
     @staticmethod
     def draw(boy):
@@ -76,12 +78,18 @@ class RunState:
             boy.velocity += 1
         boy.dir = boy.velocity
 
+        if(boy.dir == 1):
+            boy.gun_state = WALK_RIGHT
+        else:
+            boy.gun_state = WALK_LEFT
+        boy.equip_gun()
+
     @staticmethod
     def exit(boy, event):
         # fill here
         if event == SPACE:
             boy.fire_ball()
-        pass
+        boy.unequip_gun()
 
     @staticmethod
     def do(boy):
@@ -89,6 +97,7 @@ class RunState:
         boy.timer -= 1
         boy.x += boy.velocity
         boy.x = clamp(25, boy.x, 1280 - 25)
+
 
     @staticmethod
     def draw(boy):
@@ -112,6 +121,7 @@ class SleepState:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
+        delay(10)
         # fill here
 
     @staticmethod
@@ -147,7 +157,7 @@ class DashState:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 7
+        boy.frame = (boy.frame + 1) % 8
         boy.timer -= 1
         if (boy.timer < 0):
             boy.add_event(DASH_TIMER)
@@ -195,7 +205,16 @@ class Boy:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
+        self.gun_state = IDLE_RIGHT
 
+    def equip_gun(self):
+        global gun
+        gun = Gun(self.x, self.y, self.gun_state)
+        game_world.add_object(gun, 1)
+
+    def unequip_gun(self):
+        global gun
+        game_world.remove_object(gun)
 
     def fire_ball(self):
         # fill here

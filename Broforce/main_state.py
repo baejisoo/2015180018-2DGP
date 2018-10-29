@@ -7,20 +7,18 @@ import game_framework
 import game_world
 
 from boy import Boy
-from back import Grass
-from ball import Ball
-
+from back import Back
 
 name = "MainState"
 
 boy = None
-grass = None
+back = None
 
 def enter():
-    global boy, grass
+    global boy, back
     boy = Boy()
-    grass = Grass()
-    game_world.add_object(grass, 0)
+    back = Back()
+    game_world.add_object(back, 0)
     game_world.add_object(boy, 1)
 
 def exit():
