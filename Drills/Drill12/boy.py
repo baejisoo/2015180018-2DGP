@@ -1,6 +1,7 @@
 import game_framework
 from pico2d import *
 from ball import Ball
+from ghost import Ghost
 
 import game_world
 
@@ -59,7 +60,7 @@ class IdleState:
     def do(boy):
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
 
-        if boy.timer + 10.0 <= get_time():
+        if boy.timer + 3.0 <= get_time():
             print(get_time())
             boy.add_event(SLEEP_TIMER)
 
@@ -112,6 +113,7 @@ class SleepState:
     @staticmethod
     def enter(boy, event):
         boy.frame = 0
+        boy.move_ghost()
 
     @staticmethod
     def exit(boy, event):
@@ -159,6 +161,9 @@ class Boy:
         ball = Ball(self.x, self.y, self.dir*3)
         game_world.add_object(ball, 1)
 
+    def move_ghost(self):
+        ghost = Ghost(self.x, self.y, self.dir*3)
+        game_world.add_object(ghost, 1)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
