@@ -16,21 +16,22 @@ class Ghost:
         global boy_x, boy_y
         if Ghost.image == None:
             Ghost.image = load_image('animation_sheet.png')
-            Ghost.image.opacify(random.randrange(0, 10) * 0.1)
+            Ghost.image.opacify(0.5)
         self.x, self.y, self.velocity = x, y, velocity
+        self.opacity = random.randrange(0, 10) * 0.1
         boy_x = x
-        boy_y = y
+        boy_y = y + 90
 
         self.move_timer = get_time()
         self.deg = 90
     def draw(self):
         self.image.clip_draw(0 * 100, 300, 100, 100, self.x, self.y)
-
+        self.image.opacify(self.opacity)
     def update(self):
         global boy_x, boy_y
         #self.x += self.velocity
-
-        radian = math.radians(self.deg)
+        self.opacity = (random.randrange(0, 10) * 0.1)
+        radian = math.radians(360 - self.deg)
         self.x = boy_x + PIXEL_PER_METER * 3 * math.cos(radian) + random.randrange(-1, 1) * 3
         self.y = boy_y + PIXEL_PER_METER * 3 * math.sin(radian)
         self.deg += RUN_SPEED_DPS

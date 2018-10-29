@@ -1,6 +1,6 @@
 {
  "type": "tileset",
- "name": "desert",
+ "name": "Desert",
  "image": "desert_tiles.png",
  "imageheight": 192,
  "imagewidth": 256,

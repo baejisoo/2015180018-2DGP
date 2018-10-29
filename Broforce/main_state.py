@@ -3,57 +3,28 @@ import json
 import os
 
 from pico2d import *
-
 import game_framework
-import title_state
-#import basic_pause_state
-import advanced_pause_state
+import game_world
+
+from boy import Boy
+from back import Grass
+from ball import Ball
+
 
 name = "MainState"
 
 boy = None
 grass = None
-font = None
-
-
-
-class Grass:
-    def __init__(self):
-        self.image = load_image('Back.png')
-
-    def draw(self):
-        self.image.draw(400, 30)
-
-
-
-class Boy:
-    def __init__(self):
-        self.x, self.y = 0, 90
-        self.frame = 0
-        self.image = load_image('run_animation.png')
-        self.dir = 1
-
-    def update(self):
-        self.frame = (self.frame + 1) % 8
-        self.x += self.dir
-        if self.x >= 800:
-            self.dir = -1
-        elif self.x <= 0:
-            self.dir = 1
-
-    def draw(self):
-        self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
-
 
 def enter():
     global boy, grass
     boy = Boy()
     grass = Grass()
+    game_world.add_object(grass, 0)
+    game_world.add_object(boy, 1)
 
 def exit():
-    global boy, grass
-    del(boy)
-    del(grass)
+    game_world.clear()
 
 def pause():
     pass
@@ -69,19 +40,23 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_state(title_state)
-        elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
-            game_framework.push_state(advanced_pause_state)
+                game_framework.quit()
+        else:
+            boy.handle_event(event)
+
 
 def update():
-    boy.update()
+    for game_object in game_world.all_objects():
+        game_object.update()
 
 
 def draw():
     clear_canvas()
-    grass.draw()
-    boy.draw()
+    for game_object in game_world.all_objects():
+        game_object.draw()
     update_canvas()
+
+
 
 
 

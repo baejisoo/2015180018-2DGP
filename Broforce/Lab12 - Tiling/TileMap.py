@@ -30,18 +30,18 @@ class TileMap:
 
     def clip_draw_to_origin(self, l, b, w, h, dx, dy):
         # fill here
-        tl = 1 // self.tilewidth
+        tl = l // self.tilewidth
         tb = b // self.tileheight
-        tw = (1 + w) // self.tilewidth - tl + 1
+        tw = (l + w) // self.tilewidth - tl + 1
         th = (b + h) // self.tileheight - tb + 1
 
-        lo = 1 % self.tilewidth
+        lo = l % self.tilewidth
         bo = b % self.tileheight
 
         for x in range(tl, min(tl + tw, self.width)):
             for y in range(tb, min(tb + th, self.height)):
                 self.tile_set.tile_images[self.data[y][x] - self.firstgid].\
-                    draw_to_origin((x-tl) * self.tilewidth - lo, (y - tb)* self.tileheight -bo)
+                    draw_to_origin((x-tl) * self.tilewidth - lo, (y - tb) * self.tileheight - bo)
         pass
 
 
