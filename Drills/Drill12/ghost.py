@@ -1,14 +1,17 @@
 from pico2d import *
+from PIL import Image, ImageFilter
 import game_world
 import random
+import game_framework
 
 PIXEL_PER_METER = (10.0 / 0.3)
-RUN_SPEED_KMPH = 20   # Km / Hour
-RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
-RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
-RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
-RUN_SPEED_DPS = (360 * 2 / 3600.0)
 
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 360
+
+PIXEL_PER_DEG = math.pi / 180.0
+CIR_SPEED_KMPH = 720
 class Ghost:
     image = None
 
@@ -16,27 +19,31 @@ class Ghost:
         global boy_x, boy_y
         if Ghost.image == None:
             Ghost.image = load_image('animation_sheet.png')
+            im = Image.open('animation_sheet.png')
+            blurImage = im.filter(ImageFilter.BLUR)
+            blurImage.save('animation_sheet-blur.png')
+            Ghost.image = load_image('animation_sheet-blur.png')
             Ghost.image.opacify(0.5)
         self.x, self.y, self.velocity = x, y, velocity
+        self.frame = 0
         self.opacity = random.randrange(0, 10) * 0.1
         boy_x = x
         boy_y = y + 90
 
-        self.move_timer = get_time()
-        self.deg = 90
     def draw(self):
-        self.image.clip_draw(0 * 100, 300, 100, 100, self.x, self.y)
+        self.image.clip_draw(int(self.frame) * 100, 300, 100, 100, self.x, self.y)
         self.image.opacify(self.opacity)
+
     def update(self):
         global boy_x, boy_y
-        #self.x += self.velocity
         self.opacity = (random.randrange(0, 10) * 0.1)
-        radian = math.radians(360 - self.deg)
-        self.x = boy_x + PIXEL_PER_METER * 3 * math.cos(radian) + random.randrange(-1, 1) * 3
-        self.y = boy_y + PIXEL_PER_METER * 3 * math.sin(radian)
-        self.deg += RUN_SPEED_DPS
-        #delay(0.01)
 
-        if self.x < 25 or self.x > 1600 - 25:
-            game_world.remove_object(self)
+        self.velocity = (self.velocity + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 360
+        #radian = math.radians(360 - self.deg)
+        radian = self.velocity * math.pi / 180
+        self.x = boy_x + PIXEL_PER_METER * 3 * math.cos(radian) + random.randrange(0, 1) * 10
+        self.y = boy_y + PIXEL_PER_METER * 3 * math.sin(radian)
+
+        self.frame = (self.frame + 8 * ACTION_PER_TIME * game_framework.frame_time) % 8
+
 
