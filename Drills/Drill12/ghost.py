@@ -15,7 +15,7 @@ CIR_SPEED_KMPH = 720
 class Ghost:
     image = None
 
-    def __init__(self, x = 1600//2, y = 90, velocity = 1):
+    def __init__(self, x = 1600/2, y = 90, velocity = 1):
         global boy_x, boy_y
         if Ghost.image == None:
             Ghost.image = load_image('animation_sheet.png')
