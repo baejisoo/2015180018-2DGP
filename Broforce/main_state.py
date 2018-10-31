@@ -9,6 +9,7 @@ import game_world
 from boy import Boy
 from back import Back
 
+
 name = "MainState"
 
 boy = None
@@ -20,6 +21,7 @@ def enter():
     back = Back()
     game_world.add_object(back, 0)
     game_world.add_object(boy, 1)
+
 
 def exit():
     game_world.clear()

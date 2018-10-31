@@ -1,67 +1,91 @@
 from pico2d import *
 from ball import Ball
 from gun import Gun
+from bullet import Bullet
 
 import game_world
+import game_framework
 
-global w, h
-w, h = 50, 55
+global w, h, bullet_w, bullet_h
+w, h = 20, 22
+bullet_w, bullet_h = 14, 8
+
+# Boy Run Speed
+PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0           # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# Bullet Speed
+PIXEL_PER_METER = (10.0 / 0.1)  # 10 pixel 10 cm
+BULLET_SPEED_MPS = 240.0
+BULLET_SPEED_PPS = (BULLET_SPEED_MPS * PIXEL_PER_METER)
+
+# Boy Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 8
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, \
-LSHIFT_DOWN, LSHIFT_UP, RSHIFT_DOWN, RSHIFT_UP, DASH_TIMER = range(11)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, JUMP, LAND_TIMER, FIRE = range(7)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
-    (SDL_KEYDOWN, SDLK_SPACE): SPACE,
-    (SDL_KEYDOWN, SDLK_LSHIFT): LSHIFT_DOWN,
-    (SDL_KEYDOWN, SDLK_RSHIFT): RSHIFT_DOWN,
-    (SDL_KEYUP, SDLK_LSHIFT): LSHIFT_UP,
-    (SDL_KEYUP, SDLK_RSHIFT): RSHIFT_UP,
+    (SDL_KEYDOWN, SDLK_SPACE): JUMP,
+    (SDL_KEYDOWN, SDLK_LCTRL): FIRE
 }
 
-
 # Boy States
-IDLE_RIGHT, IDLE_LEFT, WALK_RIGHT, WALK_LEFT = range(4)
+JUMP_LEFT, JUMP_RIGHT, WALK_LEFT, WALK_RIGHT, IDLE_LEFT, IDLE_RIGHT = range(6)
+SHOT_LEFT, SHOT_RIGHT = range(2)
+
 class IdleState:
 
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
-            boy.velocity += 1
+            boy.velocity += RUN_SPEED_PPS
         elif event == LEFT_DOWN:
-            boy.velocity -= 1
+            boy.velocity -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            boy.velocity -= 1
+            boy.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
-            boy.velocity += 1
-        boy.timer = 300
+            boy.velocity += RUN_SPEED_PPS
+
+        if boy.dir == 1:
+            boy.gun_state = IDLE_RIGHT
+        else:
+            boy.gun_state = IDLE_LEFT
+        boy.equip_gun()
 
     @staticmethod
     def exit(boy, event):
-        # fill here
-        if event == SPACE:
-            boy.fire_ball()
-        pass
+        if event == FIRE:
+            if boy.dir == 1:
+                boy.gun_state = SHOT_RIGHT
+                print(boy.gun_state)
+            else:
+                boy.gun_state = SHOT_LEFT
+            boy.fire_bullet()
+        boy.unequip_gun()
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        # fill here
-        boy.timer -= 1
+        boy.update_gun()
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
         #if boy.timer == 0:
         #    boy.add_event(SLEEP_TIMER)
-
 
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
-            boy.image.clip_draw(boy.frame * w, h * 3, w, h, boy.x, boy.y)
+            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_RIGHT, w, h, boy.x, boy.y, w * 5, h * 5)
         else:
-            boy.image.clip_draw(boy.frame * w, h * 2, w, h, boy.x, boy.y)
+            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_LEFT, w, h, boy.x, boy.y, w * 5, h * 5)
 
 
 class RunState:
@@ -69,16 +93,16 @@ class RunState:
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
-            boy.velocity += 1
+            boy.velocity += RUN_SPEED_PPS
         elif event == LEFT_DOWN:
-            boy.velocity -= 1
+            boy.velocity -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            boy.velocity -= 1
+            boy.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
-            boy.velocity += 1
-        boy.dir = boy.velocity
+            boy.velocity += RUN_SPEED_PPS
 
-        if(boy.dir == 1):
+        boy.dir = clamp(-1, boy.velocity, 1)
+        if boy.dir == 1:
             boy.gun_state = WALK_RIGHT
         else:
             boy.gun_state = WALK_LEFT
@@ -86,122 +110,102 @@ class RunState:
 
     @staticmethod
     def exit(boy, event):
-        # fill here
-        if event == SPACE:
-            boy.fire_ball()
+        if event == FIRE:
+            if boy.dir == 1:
+                boy.gun_state = SHOT_RIGHT
+            else:
+                boy.gun_state = SHOT_LEFT
+            boy.fire_bullet()
         boy.unequip_gun()
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 1
-        boy.x += boy.velocity
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        boy.x += boy.velocity * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1280 - 25)
-
-
-    @staticmethod
-    def draw(boy):
-        if boy.velocity == 1:
-            boy.image.clip_draw(boy.frame * w, h * 1, w, h, boy.x, boy.y)
-        else:
-            boy.image.clip_draw(boy.frame * w, h * 0, w, h, boy.x, boy.y)
-
-
-class SleepState:
-
-    @staticmethod
-    def enter(boy, event):
-        boy.frame = 0
-
-    @staticmethod
-    def exit(boy, event):
-        # fill here
-        pass
-
-    @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        delay(10)
-        # fill here
+        boy.update_gun()
 
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
-            boy.image.clip_composite_draw(boy.frame * 20, 66, 20, 22, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 20,
-                                          22)
+            boy.image.clip_draw(int(boy.frame) * w, h * WALK_RIGHT, w, h, boy.x, boy.y, w * 5, h * 5)
         else:
-            boy.image.clip_composite_draw(boy.frame * 20, 44, 20, 22, -3.141592 / 2, '', boy.x + 25, boy.y - 25,
-                                          20, 22)
+            boy.image.clip_draw(int(boy.frame) * w, h * WALK_LEFT, w, h, boy.x, boy.y, w * 5, h * 5)
 
-class DashState:
+
+class JumpState:
 
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
-            boy.velocity += 1
+            boy.velocity += RUN_SPEED_PPS
         elif event == LEFT_DOWN:
-            boy.velocity -= 1
+            boy.velocity -= RUN_SPEED_PPS
         elif event == RIGHT_UP:
-            boy.velocity -= 1
+            boy.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
-            boy.velocity += 1
-        boy.dir = boy.velocity
-        boy.timer = 200
+            boy.velocity += RUN_SPEED_PPS
+
+        if boy.dir == 1:
+            boy.gun_state = JUMP_RIGHT
+        else:
+            boy.gun_state = JUMP_LEFT
+        boy.equip_gun()
 
     @staticmethod
     def exit(boy, event):
-        # fill here
-        if event == SPACE:
-            boy.dash_fire_ball()
-        pass
+        if event == FIRE:
+            if boy.dir == 1:
+                boy.gun_state = SHOT_RIGHT
+            else:
+                boy.gun_state = SHOT_LEFT
+            boy.fire_bullet()
+        boy.unequip_gun()
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 1
-        if (boy.timer < 0):
-            boy.add_event(DASH_TIMER)
-
-        boy.x += boy.velocity * 3.5
+        boy.update_gun()
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        boy.x += boy.velocity * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1280 - 25)
+        boy.jump_timer += game_framework.frame_time
+        if boy.jump_timer < 1:
+            boy.y += h * 7 * game_framework.frame_time
+        elif boy.jump_timer >= 1 and boy.jump_timer <= 2:
+            boy.y -= h * 7 * game_framework.frame_time
+        elif boy.jump_timer > 2:
+            boy.jump_timer = 0
+            boy.add_event(LAND_TIMER)
+
 
     @staticmethod
     def draw(boy):
-        if boy.velocity == 1:
-            boy.image.clip_draw(boy.frame * 20, 22, 20, 22, boy.x, boy.y)
+        if boy.dir == 1:
+            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_RIGHT, w, h, boy.x, boy.y, w * 5, h * 5)
         else:
-            boy.image.clip_draw(boy.frame * 20, 0, 20, 22, boy.x, boy.y)
-
+            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_LEFT, w, h, boy.x, boy.y, w * 5, h * 5)
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
-                SLEEP_TIMER: SleepState, SPACE: IdleState,
-                LSHIFT_DOWN: IdleState, LSHIFT_UP: IdleState,
-                RSHIFT_DOWN: IdleState, RSHIFT_UP: IdleState},
+                JUMP: JumpState, FIRE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
-               SPACE: RunState,
-               LSHIFT_DOWN: DashState, RSHIFT_DOWN: DashState,
-               LSHIFT_UP: RunState, RSHIFT_UP: RunState},
-    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState,
-                 SPACE: IdleState,
-                 LSHIFT_DOWN: IdleState, LSHIFT_UP: IdleState,
-                 RSHIFT_DOWN: IdleState, RSHIFT_UP: IdleState},
-    DashState: {LSHIFT_UP: RunState, RSHIFT_UP: RunState,
-                RIGHT_UP: IdleState, LEFT_UP: IdleState,
-                RIGHT_DOWN: IdleState, LEFT_DOWN: IdleState,
-                SPACE: DashState,
-                DASH_TIMER: RunState}
+               JUMP: JumpState, FIRE: RunState},
+    JumpState: {LAND_TIMER: IdleState, JUMP: JumpState,
+                RIGHT_UP: JumpState, LEFT_UP: JumpState, RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
+                FIRE: JumpState}
 }
+
 
 class Boy:
 
     def __init__(self):
         self.x, self.y = 1280 // 2, 90
-        self.image = load_image('rambro_stand_walk4.png')
+        self.image = load_image('rambro_animation.png')
+        self.font = load_font('Typo_SsangmunDongB.TTF', 16)
         self.dir = 1
         self.velocity = 0
         self.frame = 0
-        self.timer = 0
+        self.jump_timer = 0
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
@@ -212,24 +216,24 @@ class Boy:
         gun = Gun(self.x, self.y, self.gun_state)
         game_world.add_object(gun, 1)
 
+    def update_gun(self):
+        global gun
+        gun.set_info(self.x, self.y, self.gun_state)
+        gun.draw()
+        gun.update()
+
     def unequip_gun(self):
         global gun
         game_world.remove_object(gun)
 
     def fire_ball(self):
-        # fill here
-        debug_print('FIRE BALL')
         ball = Ball(self.x, self.y, self.dir * 3)
         game_world.add_object(ball, 1)
         pass
 
-    def dash_fire_ball(self):
-        # fill here
-        print('DASH FIRE BALL')
-        ball = Ball(self.x, self.y, self.dir * 5)
-        game_world.add_object(ball, 1)
-        pass
-
+    def fire_bullet(self):
+        bullet = Bullet(self.x, self.y, self.dir * 10)
+        game_world.add_object(bullet, 1)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -244,7 +248,7 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-
+        self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
