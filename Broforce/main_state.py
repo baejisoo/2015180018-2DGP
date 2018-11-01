@@ -5,6 +5,7 @@ import os
 from pico2d import *
 import game_framework
 import game_world
+import title_state
 
 from boy import Boy
 from back import Back

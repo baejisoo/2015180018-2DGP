@@ -19,11 +19,13 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 # Boy States
-JUMP_LEFT, JUMP_RIGHT, WALK_LEFT, WALK_RIGHT, IDLE_LEFT, IDLE_RIGHT = range(6)
-SHOT_LEFT, SHOT_RIGHT = range(2)
+JUMP_LEFT, JUMP_RIGHT, WALK_LEFT, WALK_RIGHT, IDLE_LEFT, IDLE_RIGHT, SHOT_LEFT, SHOT_RIGHT = range(8)
+
+
 class Gun:
     image = None
     image_fire = None
+
     def __init__(self, x=1280 // 2, y=720 // 2, state=IDLE_RIGHT):
         if Gun.image == None:
             Gun.image = load_image('rambro_gun_animation.png')
@@ -44,9 +46,9 @@ class Gun:
         elif self.state == WALK_LEFT:
             self.image.clip_draw(int(self.frame) * w, h * 0, w, h, self.x, self.y, w * 5, h * 5)
         elif self.state == SHOT_RIGHT:
-            self.image_fire.clip_draw(int(self.frame) * w, h * 1, w, h, self.x, self.y, w * 5, h * 5)
+            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 1, 40, 22, self.x, self.y, w * 5, h * 5)
         elif self.state == SHOT_LEFT:
-            self.image_fire.clip_draw(int(self.frame) * w, h * SHOT_LEFT, w, h, self.x, self.y, w * 5, h * 5)
+            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 0, 40, 22, self.x, self.y, w * 5, h * 5)
 
     def update(self):
         global gun_state
@@ -55,7 +57,7 @@ class Gun:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
         elif self.state == WALK_RIGHT or self.state == WALK_LEFT:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        elif self.state == JUMP_RIGHT or self.state == JUMP_LEFT:
+        elif self.state == JUMP_RIGHT or self.state == JUMP_LEFT or self.state == SHOT_RIGHT or self.state == SHOT_LEFT:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
 
     def set_info(self, x, y, state):

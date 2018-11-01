@@ -10,19 +10,28 @@ image = None
 def enter():
     global image, startimage, exitimage, selectimage
     global select_frame, select_x, select_y
+    global bgm, select_sound
     select_frame, select_x, select_y = 0, 1280 // 2, 720 // 10 * 3
     image = load_image('logo2.png')
     startimage = load_image('Start.png')
     exitimage = load_image('Exit.png')
     selectimage = load_image('Select.png')
 
-def exit():
-    global image
-    del(image)
+    bgm = load_wav('MenuBGM.wav')
+    bgm.set_volume(10)
+    bgm.repeat_play()
 
+    select_sound = load_wav('Rambro_Shot1.wav')
+    select_sound.set_volume(10)
+
+def exit():
+    global image, bgm, select_sound
+    del(image)
+    del(bgm)
+    del(select_sound)
 
 def handle_events():
-    global select_y
+    global select_y, select_sound
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -32,10 +41,13 @@ def handle_events():
                 game_framework.quit()
             elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_UP) and select_y == 720 // 10 * 1:
                 select_y = 720//10 * 3
+                select_sound.play()
             elif(event.type, event.key) == (SDL_KEYDOWN, SDLK_DOWN) and select_y == 720 // 10 * 3:
                 select_y = 720//10 * 1
+                select_sound.play()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 if select_y == 720 / 10 * 3:
+                    select_sound.play()
                     game_framework.change_state(main_state)
                 elif select_y == 720 / 10 * 1:
                     game_framework.quit()

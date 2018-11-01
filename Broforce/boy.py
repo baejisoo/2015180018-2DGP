@@ -2,6 +2,8 @@ from pico2d import *
 from ball import Ball
 from gun import Gun
 from bullet import Bullet
+from effect_walk import Effect_walk
+from effect_jump import Effect_jump
 
 import game_world
 import game_framework
@@ -40,8 +42,8 @@ key_event_table = {
 }
 
 # Boy States
-JUMP_LEFT, JUMP_RIGHT, WALK_LEFT, WALK_RIGHT, IDLE_LEFT, IDLE_RIGHT = range(6)
-SHOT_LEFT, SHOT_RIGHT = range(2)
+JUMP_LEFT, JUMP_RIGHT, WALK_LEFT, WALK_RIGHT, IDLE_LEFT, IDLE_RIGHT, SHOT_LEFT, SHOT_RIGHT = range(8)
+
 
 class IdleState:
 
@@ -67,7 +69,6 @@ class IdleState:
         if event == FIRE:
             if boy.dir == 1:
                 boy.gun_state = SHOT_RIGHT
-                print(boy.gun_state)
             else:
                 boy.gun_state = SHOT_LEFT
             boy.fire_bullet()
@@ -76,7 +77,8 @@ class IdleState:
     @staticmethod
     def do(boy):
         boy.update_gun()
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+        boy.x += boy.velocity * game_framework.frame_time
         #if boy.timer == 0:
         #    boy.add_event(SLEEP_TIMER)
 
@@ -107,6 +109,7 @@ class RunState:
         else:
             boy.gun_state = WALK_LEFT
         boy.equip_gun()
+        #boy.walk_sound.repeat_play()
 
     @staticmethod
     def exit(boy, event):
@@ -123,7 +126,12 @@ class RunState:
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         boy.x += boy.velocity * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1280 - 25)
+        boy.walk_effect_timer += game_framework.frame_time
+        if boy.walk_effect_timer > 0.5:
+            boy.create_effect_walk()
+            boy.walk_effect_timer = 0
         boy.update_gun()
+        boy.walk_sound.play()
 
     @staticmethod
     def draw(boy):
@@ -151,6 +159,7 @@ class JumpState:
         else:
             boy.gun_state = JUMP_LEFT
         boy.equip_gun()
+        boy.jump_sound.play()
 
     @staticmethod
     def exit(boy, event):
@@ -210,6 +219,12 @@ class Boy:
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
         self.gun_state = IDLE_RIGHT
+        self.walk_effect_timer = 0
+        self.walk_sound = load_wav('Foot.wav')
+        self.walk_sound.set_volume(8)
+        self.jump_effect_timer = 0
+        self.jump_sound = load_wav('Jump.wav')
+        self.jump_sound.set_volume(8)
 
     def equip_gun(self):
         global gun
@@ -232,8 +247,22 @@ class Boy:
         pass
 
     def fire_bullet(self):
-        bullet = Bullet(self.x, self.y, self.dir * 10)
+        bullet = Bullet(self.x, self.y - 7.0, self.dir * 10)
         game_world.add_object(bullet, 1)
+
+    def create_effect_walk(self):
+        global effect_walk
+        effect_walk = Effect_walk(self.x, self.y - 25, 1)
+        game_world.add_object(effect_walk, 1)
+
+    def create_effect_jump(self):
+        global effect_jump
+        effect_jump = Effect_jump(self.x, self.y - 25, 1)
+        game_world.add_object(effect_jump, 1)
+
+    def delete_effect_jump(self):
+        global effect_jump
+        game_world.remove_object(effect_jump)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
