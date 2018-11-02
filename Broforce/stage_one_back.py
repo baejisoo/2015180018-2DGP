@@ -6,9 +6,17 @@ class Stage_one_back:
        #self.bgm = load_wav('Stage1_BGM.wav')
        #self.bgm.set_volume(10)
        #self.bgm.repeat_play()
+        self.canvas_width = get_canvas_width()
+        self.canvas_height = get_canvas_height()
+        self.w = self.image.w
+        self.h = self.image.h
 
     def update(self):
-        pass
-
+        self.left = clamp(0, int(self.set_center_object.x) -
+                          self.canvas_width // 2, self.w - self.canvas_width)
     def draw(self):
-        self.image.draw(self.image.w / 2, self.image.h / 2)
+        self.image.clip_draw_to_origin(self.left, 0, self.canvas_width,
+                                       self.canvas_height, 0, 0)
+
+    def set_center_object(self, boy):
+        self.set_center_object = boy

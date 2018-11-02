@@ -86,10 +86,16 @@ class IdleState:
 
     @staticmethod
     def draw(boy):
+        x_left_offset = min(0, boy.x - boy.canvas_width // 2)
+        x_right_offset = max(0, boy.x - boy.bg.w + boy.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
+
         if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_RIGHT, w, h, boy.x, boy.y, w * size, h * size)
+            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_RIGHT, w, h,
+                                boy.canvas_width//2+x_offset, boy.canvas_height//2, w * size, h * size)
         else:
-            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_LEFT, w, h,boy.x, boy.y, w * size, h * size)
+            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_LEFT, w, h,
+                                boy.canvas_width//2+x_offset, boy.canvas_height//2, w * size, h * size)
 
 
 class RunState:
@@ -127,7 +133,7 @@ class RunState:
     def do(boy):
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         boy.x += boy.velocity * game_framework.frame_time
-        boy.x = clamp(25, boy.x, 1280 - 25)
+        #boy.x = clamp(25, boy.x, 1280 - 25)
         boy.walk_effect_timer += game_framework.frame_time
         if boy.walk_effect_timer > 0.5:
             boy.create_effect_walk()
@@ -137,14 +143,17 @@ class RunState:
 
     @staticmethod
     def draw(boy):
+        x_left_offset = min(0, boy.x - boy.canvas_width // 2)
+        x_right_offset = max(0, boy.x - boy.bg.w + boy.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
         if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * w, h * WALK_RIGHT, w, h, boy.x, boy.y, w * size, h * size)
+            boy.image.clip_draw(int(boy.frame) * w, h * WALK_RIGHT, w, h,
+                                boy.canvas_width//2+x_offset, boy.canvas_height//2, w * size, h * size)
         else:
-            boy.image.clip_draw(int(boy.frame) * w, h * WALK_LEFT, w, h, boy.x, boy.y, w * size, h * size)
-
+            boy.image.clip_draw(int(boy.frame) * w, h * WALK_LEFT, w, h,
+                                boy.canvas_width//2+x_offset, boy.canvas_height//2, w * size, h * size)
 
 class JumpState:
-
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
@@ -178,22 +187,28 @@ class JumpState:
         boy.update_gun()
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
         boy.x += boy.velocity * game_framework.frame_time
-        boy.x = clamp(25, boy.x, 1280 - 25)
+        #boy.x = clamp(25, boy.x, 1280 - 25)
         boy.jump_timer += game_framework.frame_time
         if boy.jump_timer < 1:
-            boy.y += h * 7 * game_framework.frame_time
+            boy.jump_y += h * 7 * game_framework.frame_time
         elif boy.jump_timer >= 1 and boy.jump_timer <= 2:
-            boy.y -= h * 7 * game_framework.frame_time
+            boy.jump_y -= h * 7 * game_framework.frame_time
         elif boy.jump_timer > 2:
             boy.jump_timer = 0
+            boy.jump_y = 0
             boy.add_event(LAND_TIMER)
 
     @staticmethod
     def draw(boy):
+        x_left_offset = min(0, boy.x - boy.canvas_width // 2)
+        x_right_offset = max(0, boy.x - boy.bg.w + boy.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
         if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_RIGHT, w, h, boy.x, boy.y, w * size, h * size)
+            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_RIGHT, w, h,
+                                boy.canvas_width//2+x_offset, boy.jump_y + boy.canvas_height//2, w * size, h * size)
         else:
-            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_LEFT, w, h, boy.x, boy.y, w * size, h * size)
+            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_LEFT, w, h,
+                                boy.canvas_width//2+x_offset, boy.jump_y + boy.canvas_height//2, w * size, h * size)
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
@@ -226,6 +241,14 @@ class Boy:
         self.jump_effect_timer = 0
         self.jump_sound = load_wav('Jump.wav')
         self.jump_sound.set_volume(8)
+        self.canvas_width = get_canvas_width()
+        self.canvas_height = get_canvas_height()
+        self.jump_y = 0
+
+    def set_background(self, bg):
+        self.bg = bg
+        self.x = self.bg.w / 10
+        self.y = self.bg.h / 2
 
     def equip_gun(self):
         global gun
@@ -234,7 +257,10 @@ class Boy:
 
     def update_gun(self):
         global gun
-        gun.set_info(self.x, self.y, self.gun_state)
+        x_left_offset = min(0, self.x - self.canvas_width // 2)
+        x_right_offset = max(0, self.x - self.bg.w + self.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
+        gun.set_info(self.canvas_width // 2 + x_offset, self.jump_y + self.canvas_height // 2, self.gun_state)
         gun.draw()
         gun.update()
 
@@ -242,18 +268,24 @@ class Boy:
         global gun
         game_world.remove_object(gun)
 
-    def fire_ball(self):
-        ball = Ball(self.x, self.y, self.dir * 3)
-        game_world.add_object(ball, 1)
-        pass
-
     def fire_bullet(self):
-        bullet = Bullet(self.x, self.y - 7.0, self.dir * 10)
+        x_left_offset = min(0, self.x - self.canvas_width // 2)
+        x_right_offset = max(0, self.x - self.bg.w + self.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
+        bullet = Bullet(self.canvas_width // 2 + x_offset, self.canvas_height // 2 - 7.0, self.dir * 10)
         game_world.add_object(bullet, 1)
 
     def create_effect_walk(self):
         global effect_walk
-        effect_walk = Effect_walk(self.x, self.y - 25, 1)
+        x_left_offset = min(0, self.x - self.canvas_width // 2)
+        x_right_offset = max(0, self.x - self.bg.w + self.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
+        if(self.canvas_width // 2 + x_offset == 640):
+            effect_walk = Effect_walk(self.canvas_width // 2 - x_offset, self.canvas_height // 2 - 10, 1)
+        else:
+            effect_walk = Effect_walk(self.canvas_width // 2 + x_offset, self.canvas_height // 2 - 10, 1)
+        print(self.canvas_width // 2 + x_offset)
+
         game_world.add_object(effect_walk, 1)
 
     def create_effect_jump(self):
@@ -278,7 +310,7 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-        self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        self.font.draw(60, 640, '(Time: %3.2f)' % get_time(), (255, 255, 0))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
