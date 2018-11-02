@@ -8,8 +8,10 @@ from TileMap import load_tile_map
 class FixedTileBackground:
 
     def __init__(self):
+        self.image = load_image('Back.png')
+        self.image_test = load_image('broforce_tiles.png')
         # fill here
-        self.tile_map = load_tile_map('desert_map.json')
+        self.tile_map = load_tile_map('broforce_map.json')
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.w = self.tile_map.width * self.tile_map.tilewidth
@@ -22,6 +24,8 @@ class FixedTileBackground:
         self.max_window_bottom = self.h - self.canvas_height
 
     def draw(self):
+        #self.image.clip_draw_to_origin(self.window_left, self.window_bottom, self.canvas_width, self.canvas_height, 0, 0)
+        #self.image_test.draw(200,200)
         self.tile_map.clip_draw_to_origin(self.window_left, self.window_bottom, self.canvas_width, self.canvas_height, 0, 0)
         pass
 
