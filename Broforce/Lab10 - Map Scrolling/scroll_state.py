@@ -18,9 +18,9 @@ def create_world():
     boy = Boy()
     background = Background()
 
-    # fill here
-
-
+    # fill here!!!!!!!!!!!!!!!!
+    background.set_center_object(boy)
+    boy.set_background(background)
 
 def destroy_world():
     global boy, background

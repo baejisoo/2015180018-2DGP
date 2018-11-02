@@ -34,7 +34,7 @@ class FreeBoy:
 
     def set_background(self, bg):
         self.bg = bg
-        self.x = self.bg.w / 2
+        self.x = self.bg.w / 10
         self.y = self.bg.h / 2
 
     def update(self, frame_time):
@@ -46,8 +46,8 @@ class FreeBoy:
         self.y += (self.ydir * distance)
 
         # fill here
-
-
+        self.x = clamp(0, self.x, self.bg.w)
+        self.y = clamp(0, self.y, self.bg.h)
 
         if self.xdir == -1: self.state = self.LEFT_RUN
         elif self.xdir == 1: self.state = self.RIGHT_RUN
@@ -58,7 +58,11 @@ class FreeBoy:
 
     def draw(self):
         # fill here
-
+        x_left_offset = min(0, self.x - self.canvas_width // 2)
+        x_right_offset = max(0, self.x - self.bg.w + self.canvas_width // 2)
+        x_offset = x_left_offset + x_right_offset
+        self.image.clip_draw(self.frame * 100, self.state * 100, 100, 100,
+                             self.canvas_width // 2 + x_offset, self.canvas_height // 2)
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())

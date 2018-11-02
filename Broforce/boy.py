@@ -8,8 +8,9 @@ from effect_jump import Effect_jump
 import game_world
 import game_framework
 
-global w, h, bullet_w, bullet_h
+global size, w, h, bullet_w, bullet_h
 w, h = 20, 22
+size = 3
 bullet_w, bullet_h = 14, 8
 
 # Boy Run Speed
@@ -82,12 +83,13 @@ class IdleState:
         #if boy.timer == 0:
         #    boy.add_event(SLEEP_TIMER)
 
+
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_RIGHT, w, h, boy.x, boy.y, w * 5, h * 5)
+            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_RIGHT, w, h, boy.x, boy.y, w * size, h * size)
         else:
-            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_LEFT, w, h, boy.x, boy.y, w * 5, h * 5)
+            boy.image.clip_draw(int(boy.frame) * w, h * IDLE_LEFT, w, h,boy.x, boy.y, w * size, h * size)
 
 
 class RunState:
@@ -136,9 +138,9 @@ class RunState:
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * w, h * WALK_RIGHT, w, h, boy.x, boy.y, w * 5, h * 5)
+            boy.image.clip_draw(int(boy.frame) * w, h * WALK_RIGHT, w, h, boy.x, boy.y, w * size, h * size)
         else:
-            boy.image.clip_draw(int(boy.frame) * w, h * WALK_LEFT, w, h, boy.x, boy.y, w * 5, h * 5)
+            boy.image.clip_draw(int(boy.frame) * w, h * WALK_LEFT, w, h, boy.x, boy.y, w * size, h * size)
 
 
 class JumpState:
@@ -186,13 +188,12 @@ class JumpState:
             boy.jump_timer = 0
             boy.add_event(LAND_TIMER)
 
-
     @staticmethod
     def draw(boy):
         if boy.dir == 1:
-            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_RIGHT, w, h, boy.x, boy.y, w * 5, h * 5)
+            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_RIGHT, w, h, boy.x, boy.y, w * size, h * size)
         else:
-            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_LEFT, w, h, boy.x, boy.y, w * 5, h * 5)
+            boy.image.clip_draw(int(boy.frame) * w, h * JUMP_LEFT, w, h, boy.x, boy.y, w * size, h * size)
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,

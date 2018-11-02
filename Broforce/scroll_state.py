@@ -11,7 +11,7 @@ from boy import Boy
 from back import Back
 from stage_one_back import Stage_one_back
 
-name = "MainState"
+name = "ScrollState"
 
 boy = None
 back = None
@@ -26,6 +26,9 @@ def enter():
     game_world.add_object(back, 0)
     game_world.add_object(stage_one_back, 0)
     game_world.add_object(boy, 1)
+
+    stage_one_back.set_center_object(boy)
+    boy.set_background(stage_one_back)
 
 def exit():
     game_world.clear()

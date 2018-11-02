@@ -1,6 +1,8 @@
 from pico2d import *
 import game_world
 
+global size
+size = 3
 class Bullet:
     image = None
     sound = None
@@ -15,7 +17,7 @@ class Bullet:
         self.sound.play()
 
     def draw(self):
-        self.image.draw(self.x, self.y, 14 * 5, 7 * 5)
+        self.image.draw(self.x, self.y, 14 * size, 7 * size)
 
     def update(self):
         self.x += self.velocity

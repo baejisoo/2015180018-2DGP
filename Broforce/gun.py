@@ -1,8 +1,8 @@
 from pico2d import *
 import game_world
 import game_framework
-global w, h
-w, h = 26, 22
+global w, h, size
+w, h, size = 26, 22, 3
 
 # Boy Run Speed
 # fill expressions correctly
@@ -38,17 +38,17 @@ class Gun:
 
     def draw(self):
         if self.state == IDLE_RIGHT or self.state == JUMP_RIGHT:
-            self.image.clip_draw(int(self.frame) * w, h * 3, w, h, self.x, self.y, w * 5, h * 5)
+            self.image.clip_draw(int(self.frame) * w, h * 3, w, h, self.x, self.y, w * size, h * size)
         elif self.state == IDLE_LEFT or self.state == JUMP_LEFT:
-            self.image.clip_draw(int(self.frame) * w, h * 2, w, h, self.x, self.y, w * 5, h * 5)
+            self.image.clip_draw(int(self.frame) * w, h * 2, w, h, self.x, self.y, w * size, h * size)
         elif self.state == WALK_RIGHT:
-            self.image.clip_draw(int(self.frame) * w, h * 1, w, h, self.x, self.y, w * 5, h * 5)
+            self.image.clip_draw(int(self.frame) * w, h * 1, w, h, self.x, self.y, w * size, h * size)
         elif self.state == WALK_LEFT:
-            self.image.clip_draw(int(self.frame) * w, h * 0, w, h, self.x, self.y, w * 5, h * 5)
+            self.image.clip_draw(int(self.frame) * w, h * 0, w, h, self.x, self.y, w * size, h * size)
         elif self.state == SHOT_RIGHT:
-            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 1, 40, 22, self.x, self.y, w * 5, h * 5)
+            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 1, 40, 22, self.x, self.y, w * size, h * size)
         elif self.state == SHOT_LEFT:
-            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 0, 40, 22, self.x, self.y, w * 5, h * 5)
+            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 0, 40, 22, self.x, self.y, w * size, h * size)
 
     def update(self):
         global gun_state
@@ -63,3 +63,4 @@ class Gun:
     def set_info(self, x, y, state):
         self.x, self.y = x, y
         self.state = state
+
