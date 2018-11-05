@@ -24,9 +24,10 @@ class FixedTileBackground:
         self.max_window_bottom = self.h - self.canvas_height
 
     def draw(self):
-        #self.image.clip_draw_to_origin(self.window_left, self.window_bottom, self.canvas_width, self.canvas_height, 0, 0)
-        #self.image_test.draw(200,200)
+        self.image.clip_draw_to_origin(self.window_left, self.window_bottom, self.canvas_width, self.canvas_height, 0, 0)
         self.tile_map.clip_draw_to_origin(self.window_left, self.window_bottom, self.canvas_width, self.canvas_height, 0, 0)
+        self.image_test.draw(200, 200)
+
         pass
 
     def update(self, frame_time):

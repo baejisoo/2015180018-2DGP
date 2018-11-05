@@ -4,7 +4,7 @@
  "height": 40,
  "tilewidth": 45,
  "tileheight":45,
- "tilesets":[ { "firstgid":1, "source":"broforce_tileset_new.json" } ],
+ "tilesets":[ { "firstgid":1, "source":"broforce_tileset.json" } ],
  "layers":[
         {
          "name":"Ground",
