@@ -1,5 +1,5 @@
 from pico2d import *
-from ball import Ball
+
 from gun import Gun
 from bullet import Bullet
 from effect_walk import Effect_walk
@@ -196,19 +196,16 @@ class JumpState:
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState,
-                JUMP: JumpState, FIRE: IdleState},
+                FIRE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState,
-               JUMP: JumpState, FIRE: RunState},
-    JumpState: {LAND_TIMER: IdleState, JUMP: JumpState,
-                RIGHT_UP: JumpState, LEFT_UP: JumpState, RIGHT_DOWN: JumpState, LEFT_DOWN: JumpState,
-                FIRE: JumpState}
+               FIRE: RunState},
 }
 
 
-class Boy:
+class Mook:
 
     def __init__(self):
-        self.x, self.y = 1280 // 2, 90
+        self.x, self.y = 640, 90
         self.image = load_image('rambro_animation.png')
         self.font = load_font('Typo_SsangmunDongB.TTF', 16)
         self.dir = 1
@@ -241,10 +238,6 @@ class Boy:
         global gun
         game_world.remove_object(gun)
 
-    def fire_ball(self):
-        ball = Ball(self.x, self.y, self.dir * 3)
-        game_world.add_object(ball, 1)
-        pass
 
     def fire_bullet(self):
         bullet = Bullet(self.x, self.y - 7.0, self.dir * 10)
@@ -277,7 +270,7 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-        self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        #self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % get_time(), (255, 255, 0))
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

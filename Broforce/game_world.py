@@ -14,6 +14,7 @@ def remove_object(o):
         if o in objects[i]:
             objects[i].remove(o)
             del o
+            break
 
 # 게임 월드의 모든 객체 제거
 def clear():

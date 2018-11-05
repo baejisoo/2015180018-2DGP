@@ -8,8 +8,10 @@ import game_world
 import title_state
 
 from boy import Boy
+from mook import Mook
 from back import Back
 from stage_one_back import Stage_one_back
+from ui import Ui
 
 name = "ScrollState"
 
@@ -18,13 +20,14 @@ back = None
 stage_one_back = None
 
 def enter():
-    global boy, back, stage_one_back
+    global boy, mook, back, stage_one_back, ui
     boy = Boy()
     back = Back()
     stage_one_back = Stage_one_back()
-
+    ui = Ui()
     game_world.add_object(back, 0)
     game_world.add_object(stage_one_back, 0)
+    game_world.add_object(ui, 0)
     game_world.add_object(boy, 1)
 
     stage_one_back.set_center_object(boy)

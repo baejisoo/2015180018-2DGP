@@ -1,5 +1,6 @@
 import game_framework
 import main_state
+import scroll_state
 from pico2d import *
 
 
@@ -48,7 +49,7 @@ def handle_events():
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
                 if select_y == 720 / 10 * 3:
                     select_sound.play()
-                    game_framework.change_state(main_state)
+                    game_framework.change_state(scroll_state)
                 elif select_y == 720 / 10 * 1:
                     game_framework.quit()
 

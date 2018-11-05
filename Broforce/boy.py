@@ -1,5 +1,4 @@
 from pico2d import *
-from ball import Ball
 from gun import Gun
 from bullet import Bullet
 from effect_walk import Effect_walk
@@ -60,6 +59,10 @@ class IdleState:
             boy.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
             boy.velocity += RUN_SPEED_PPS
+        elif event == UP_DOWN:
+            boy.velocity += RUN_SPEED_PPS
+        elif event == DOWN_DOWN:
+            boy.velocity -= RUN_SPEED_PPS
 
         if boy.dir == 1:
             boy.gun_state = IDLE_RIGHT
@@ -75,17 +78,18 @@ class IdleState:
             else:
                 boy.gun_state = SHOT_LEFT
             boy.fire_bullet()
-        elif event == UP_DOWN:
-            boy.y += 20
-        elif event == DOWN_DOWN:
-            boy.y -= 20
+        #el#if event == UP_DOWN:
+        #    boy.y += 20
+        #elif event == DOWN_DOWN:
+        #    boy.y -= 20
         boy.unequip_gun()
 
     @staticmethod
     def do(boy):
         boy.update_gun()
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        boy.x += boy.velocity * game_framework.frame_time
+        #boy.x += boy.velocity * game_framework.frame_time
+        boy.y += boy.velocity * game_framework.frame_time
         #if boy.timer == 0:
         #    boy.add_event(SLEEP_TIMER)
 
