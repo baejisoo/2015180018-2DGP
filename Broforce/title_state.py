@@ -19,11 +19,11 @@ def enter():
     selectimage = load_image('Select.png')
 
     bgm = load_wav('MenuBGM.wav')
-    bgm.set_volume(10)
+    bgm.set_volume(100000)
     bgm.repeat_play()
 
     select_sound = load_wav('Rambro_Shot1.wav')
-    select_sound.set_volume(10)
+    select_sound.set_volume(100000)
 
 def exit():
     global image, bgm, select_sound

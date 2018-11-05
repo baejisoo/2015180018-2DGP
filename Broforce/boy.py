@@ -260,10 +260,10 @@ class Boy:
         self.gun_state = IDLE_RIGHT
         self.walk_effect_timer = 0
         self.walk_sound = load_wav('Foot.wav')
-        self.walk_sound.set_volume(8)
+        self.walk_sound.set_volume(10000000)
         self.jump_effect_timer = 0
         self.jump_sound = load_wav('Jump.wav')
-        self.jump_sound.set_volume(8)
+        self.jump_sound.set_volume(10000000)
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.jump_y = 0
