@@ -22,7 +22,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"broforce_tileset.json"
+         "source":"broforce_tileset_new.json"
         }],
  "tilewidth":32,
  "type":"map",
