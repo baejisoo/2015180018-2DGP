@@ -13,16 +13,16 @@ def enter():
     global select_frame, select_x, select_y
     global bgm, select_sound
     select_frame, select_x, select_y = 0, 1280 // 2, 720 // 10 * 3
-    image = load_image('logo2.png')
-    startimage = load_image('Start.png')
-    exitimage = load_image('Exit.png')
-    selectimage = load_image('Select.png')
+    image = load_image('image/logo2.png')
+    startimage = load_image('image/Start.png')
+    exitimage = load_image('image/Exit.png')
+    selectimage = load_image('image/Select.png')
 
-    bgm = load_wav('MenuBGM.wav')
+    bgm = load_wav('sound/MenuBGM.wav')
     bgm.set_volume(100000)
     bgm.repeat_play()
 
-    select_sound = load_wav('Rambro_Shot1.wav')
+    select_sound = load_wav('sound/Rambro_Shot1.wav')
     select_sound.set_volume(100000)
 
 def exit():

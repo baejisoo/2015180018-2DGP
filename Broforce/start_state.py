@@ -26,7 +26,7 @@ def update():
         #game_framework.quit()
         game_framework.push_state(title_state)
     delay(0.01)
-    #logo_time += 0.01
+    logo_time += 0.01
 
 def draw():
     global image
