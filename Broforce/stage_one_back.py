@@ -2,7 +2,7 @@ from pico2d import *
 
 class Stage_one_back:
     def __init__(self):
-        self.image = load_image('StageOne_Back1.png')
+        self.image = load_image('image/StageOne_Back1.png')
        #self.bgm = load_wav('Stage1_BGM.wav')
        #self.bgm.set_volume(10)
        #self.bgm.repeat_play()

@@ -2,9 +2,9 @@ from pico2d import *
 
 class Ui:
     def __init__(self):
-        self.image_ui_back = load_image('Rambro_Face3.png')
-        self.image_face = load_image('Rambro_Face0.png')
-        self.image_hp = load_image('Rambro_Face4.png')
+        self.image_ui_back = load_image('image/Rambro_Face3.png')
+        self.image_face = load_image('image/Rambro_Face0.png')
+        self.image_hp = load_image('image/Rambro_Face4.png')
        #self.bgm = load_wav('Stage1_BGM.wav')
        #self.bgm.set_volume(10)
        #self.bgm.repeat_play()
