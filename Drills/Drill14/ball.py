@@ -12,7 +12,7 @@ class Ball:
         self.x, self.y, self.fall_speed = random.randint(0, 1600-1), random.randint(0, 1600-1), 0
 
     def get_bb(self):
-        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+        return self.cx - 10, self.cy - 10, self.cx + 10, self.cy + 10
 
     def draw(self):
         self.image.draw(self.cx, self.cy)
