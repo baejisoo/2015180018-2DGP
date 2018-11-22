@@ -34,9 +34,6 @@ def collide(a, b):
 
 
 def enter():
-    global boy
-    boy = Boy()
-    game_world.add_object(boy, 1)
 
     # global grass
     # grass = Grass()
@@ -46,9 +43,15 @@ def enter():
     background = Background()
     game_world.add_object(background, 0)
 
+    global boy
+    boy = Boy()
+    game_world.add_object(boy, 1)
+
     global balls
     balls = [Ball() for i in range(100)]
-    game_world.add_objects(balls, 0)
+    for ball in balls:
+        ball.set_background(background)
+    game_world.add_objects(balls, 1)
 
     # fill here
     background.set_center_object(boy)
