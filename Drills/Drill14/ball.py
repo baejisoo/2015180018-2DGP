@@ -21,7 +21,7 @@ class Ball:
     def update(self):
         self.y -= self.fall_speed * game_framework.frame_time
         self.x = clamp(0, self.x, self.bg.w)
-        self.y = clamp(70, self.y, 1110)
+        self.y = clamp(50, self.y, 1150)
         self.cx, self.cy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
 
     def set_background(self, bg):
