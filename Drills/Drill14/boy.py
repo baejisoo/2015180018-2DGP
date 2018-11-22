@@ -132,7 +132,7 @@ class Boy:
 
     def get_bb(self):
         bx, by = self.x - self.bg.window_left, self.y - self.bg.window_bottom
-        return bx - 50, by - 50, bx + 50, by + 50
+        return bx - 20, by - 35, bx + 20, by + 35
 
     def set_background(self, bg):
         self.bg = bg
