@@ -153,7 +153,7 @@ class Boy:
     def draw(self):
         self.cur_state.draw(self)
         fx, fy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
-        self.font.draw(fx - 60, fy + 50, '(%5d, %5d)' % (self.eat_count, self.y), (255, 255, 0))
+        self.font.draw(fx - 60, fy + 50, '(ball eat count: %3d)' % (self.eat_count), (255, 255, 0))
         #fill here
         draw_rectangle(*self.get_bb())
         #debug_print('Velocity :' + str(self.velocity) + '  Dir:' + str(self.dir) + ' Frame Time:' + str(game_framework.frame_time))
