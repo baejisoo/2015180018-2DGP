@@ -46,12 +46,13 @@ class Zombie:
 
     def __getstate__(self):
         # fill here
-        pass
-
+        state = {'x': self.x, 'y': self.y, 'dir': self.dir, 'name': self.name, 'size': self.size}
+        return state
 
     def __setstate__(self, state):
         # fill here
-        pass
+        self.__init__()
+        self.__dict__.update(state)
 
 
     def wander(self):
@@ -114,6 +115,7 @@ class Zombie:
                 Zombie.images['Walk'][int(self.frame)].draw(self.x, self.y, tw, th)
 
         Zombie.font.draw(self.x - 30, self.y + 50, self.name, (255, 255, 0))
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         pass

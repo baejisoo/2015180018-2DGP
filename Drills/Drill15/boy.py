@@ -131,12 +131,13 @@ class Boy:
 
     def __getstate__(self):
         # fill here
-        pass
-
+        state = {'x': self.x, 'y': self.y, 'dir': self.dir, 'cur_state': self.cur_state}
+        return state
 
     def __setstate__(self, state):
         # fill here
-        pass
+        self.__init__()
+        self.__dict__.update(state)
 
     def get_bb(self):
         # fill here
@@ -162,6 +163,7 @@ class Boy:
     def draw(self):
         self.cur_state.draw(self)
         self.font.draw(self.x - 60, self.y + 50, '(Time: %3.2f)' % (get_time() - self.start_time), (0, 0, 0))
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:

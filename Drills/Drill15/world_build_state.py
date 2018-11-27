@@ -15,10 +15,21 @@ from zombie import Zombie
 
 boy = None
 
-
 name = "WorldBuildState"
 
 menu = None
+
+def collide(a, b):
+    # fill here
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
 
 def enter():
     global menu
@@ -45,13 +56,23 @@ def create_new_world():
     game_world.add_object(boy, 1)
 
     # fill here
-
+    with open('zombie_data.json', 'r') as f:
+        zombie_data_list = json.load(f)
+    for data in zombie_data_list:
+        zombie = Zombie(data['name'], data['x'], data['y'], data['size'])
+        game_world.add_object(zombie, 1)
 
 
 def load_saved_world():
     global boy
 
     # fill here
+    game_world.load()
+    for o in game_world.all_objects():
+        if isinstance(o, Boy):
+            boy = o
+            break
+
 
 
 def handle_events():
@@ -69,7 +90,8 @@ def handle_events():
             game_framework.change_state(main_state)
 
 def update():
-    pass
+    for game_object in game_world.all_objects():
+        game_object.update()
 
 def draw():
     clear_canvas()

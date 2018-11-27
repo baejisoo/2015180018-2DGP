@@ -59,7 +59,9 @@ def handle_events():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
-
+    for zombies in game_world.objects[1]:
+        if collide(boy, zombies):
+            print("collide")
 
 def draw():
     clear_canvas()
