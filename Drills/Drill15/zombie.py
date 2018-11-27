@@ -6,6 +6,8 @@ from pico2d import *
 import world_build_state
 import ranking_state
 import game_world
+from boy import Boy
+boy= world_build_state.get_boy()
 
 # zombie Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -106,6 +108,13 @@ class Zombie:
         for game_object in game_world.all_objects():
             if str(game_object).find("boy") != -1:
                 if game_object.x > self.x - 50 and game_object.x < self.x + 50 and game_object.y < self.y + 50 and game_object.y > self.y - 50:
+                    ranking_state.rank[9] = boy.start_time
+                    for j in range(0, 10):
+                        for i in range(0, 10):
+                            if ranking_state.rank[i] < ranking_state.rank[i + 1]:
+                                temp = ranking_state.rank[i]
+                                ranking_state.rank[i] = ranking_state.rank[i + 1]
+                                ranking_state.rank[i + 1] = temp
                     game_framework.change_state(ranking_state)
 
     def draw(self):

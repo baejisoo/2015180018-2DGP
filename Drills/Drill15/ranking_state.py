@@ -13,7 +13,7 @@ boy = None
 name = "WorldBuildState"
 rank = []
 for i in range(0,10):
-    rank.append("score")
+    rank.append(0)
 
 def enter():
     hide_cursor()
