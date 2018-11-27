@@ -4,6 +4,8 @@ import game_framework
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
 from pico2d import *
 import world_build_state
+import ranking_state
+import game_world
 
 # zombie Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -100,6 +102,11 @@ class Zombie:
         self.y += self.speed * math.sin(self.dir)* game_framework.frame_time
         self.x = clamp(50, self.x, get_canvas_width() - 50)
         self.y = clamp(50, self.y, get_canvas_height() - 50)
+
+        for game_object in game_world.all_objects():
+            if str(game_object).find("boy") != -1:
+                if game_object.x > self.x - 50 and game_object.x < self.x + 50 and game_object.y < self.y + 50 and game_object.y > self.y - 50:
+                    game_framework.change_state(ranking_state)
 
     def draw(self):
         tw, th = int(100*self.size), int(100*self.size)
