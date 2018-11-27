@@ -5,25 +5,23 @@ import os
 
 from pico2d import *
 import game_framework
-
 import game_world
 import main_state
+import world_build_state
+
 boy = None
 name = "WorldBuildState"
-menu = None
-
+rank = []
+for i in range(0,10):
+    rank.append("score")
 
 def enter():
-    global menu
-    menu = load_image('menu.png')
     hide_cursor()
     hide_lattice()
 
 
 def exit():
-    global menu
-    del menu
-
+    pass
 
 def pause():
     pass
@@ -43,7 +41,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_state(world_build_state)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_n:
             game_framework.change_state(main_state)
         elif event.type == SDL_KEYDOWN and event.key == SDLK_l:
@@ -54,5 +52,8 @@ def update():
 
 def draw():
     clear_canvas()
-    menu.draw(get_canvas_width() // 2, get_canvas_height() // 2)
+    font = load_font('ENCR10B.TTF', 20)
+    for i in range(0, 10):
+        font.draw(400, 800 - i*50, str(i) + " - " + str(rank[i]), (255, 0, 0))
+
     update_canvas()
