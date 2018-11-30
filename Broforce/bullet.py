@@ -8,10 +8,10 @@ class Bullet:
     sound = None
     def __init__(self, x = 400, y = 300, velocity = 1):
         if Bullet.image == None:
-            Bullet.image = load_image('rambro_bullet14x8.png')
+            Bullet.image = load_image('image/rambro_bullet14x8.png')
         if Bullet.sound == None:
-            Bullet.sound = load_wav('Rambro_Shot1.wav')
-            Bullet.sound.set_volume(8)
+            Bullet.sound = load_wav('sound/Rambro_Shot1.wav')
+            Bullet.sound.set_volume(50)
 
         self.x, self.y, self.velocity = x, y, velocity
         self.sound.play()

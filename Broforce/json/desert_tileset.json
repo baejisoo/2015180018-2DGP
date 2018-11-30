@@ -6,6 +6,6 @@
  "tiledversion":"1.2.0",
  "tileheight":1,
  "tilewidth":1,
- "type":"tileset",
+ "type":"image/tileset",
  "version":1.2
 }

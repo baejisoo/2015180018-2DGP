@@ -28,9 +28,9 @@ class Gun:
 
     def __init__(self, x=1280 // 2, y=720 // 2, state=IDLE_RIGHT):
         if Gun.image == None:
-            Gun.image = load_image('rambro_gun_animation.png')
+            Gun.image = load_image('image/rambro_gun_animation.png')
         if Gun.image_fire == None:
-            Gun.image_fire = load_image('rambro_gun_shot_animation.png')
+            Gun.image_fire = load_image('image/rambro_gun_shot_animation.png')
         self.x, self.y, self.state = x, y, state
         self.frame = 0
         global gun_state

@@ -16,13 +16,14 @@ class Effect_walk:
 
     def __init__(self, x = 640, y = 360, velocity = 1):
         if Effect_walk.image == None:
-            Effect_walk.image = load_image('effect_walk.png')
+            Effect_walk.image = load_image('image/effect_walk.png')
         self.x, self.y, self.velocity = x, y, velocity
         self.timer = 0
         self.frame = 0
 
     def draw(self):
         self.image.clip_draw(int(self.frame) * w, 0, w, h, self.x, self.y, w * 5, h * 5)
+
     def update(self):
         self.timer += self.velocity
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
@@ -31,4 +32,5 @@ class Effect_walk:
             game_world.remove_object(self)
 
         if self.x < 25 or self.x > 1600 - 25:
-            game_world.remove_object(self)
+            #game_world.remove_object(self)
+            pass

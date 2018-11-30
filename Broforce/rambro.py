@@ -12,7 +12,7 @@ w, h = 20, 22
 size = 3
 bullet_w, bullet_h = 14, 8
 
-# Boy Run Speed
+# rambro Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0           # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -24,12 +24,12 @@ PIXEL_PER_METER = (10.0 / 0.1)  # 10 pixel 10 cm
 BULLET_SPEED_MPS = 240.0
 BULLET_SPEED_PPS = (BULLET_SPEED_MPS * PIXEL_PER_METER)
 
-# Boy Action Speed
+# rambro Action Speed
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
-# Boy Event
+# rambro Event
 RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, JUMP, LAND_TIMER, FIRE, UP_DOWN, DOWN_DOWN = range(9)
 
 key_event_table = {
@@ -248,8 +248,8 @@ class Boy:
 
     def __init__(self):
         self.x, self.y = 1280 // 2, 90
-        self.image = load_image('rambro_animation.png')
-        self.font = load_font('Typo_SsangmunDongB.TTF', 16)
+        self.image = load_image('image/rambro_animation.png')
+        self.font = load_font('ttf/Typo_SsangmunDongB.TTF', 16)
         self.dir = 1
         self.velocity = 0
         self.frame = 0
@@ -259,10 +259,10 @@ class Boy:
         self.cur_state.enter(self, None)
         self.gun_state = IDLE_RIGHT
         self.walk_effect_timer = 0
-        self.walk_sound = load_wav('Foot.wav')
+        self.walk_sound = load_wav('sound/Foot.wav')
         self.walk_sound.set_volume(10000000)
         self.jump_effect_timer = 0
-        self.jump_sound = load_wav('Jump.wav')
+        self.jump_sound = load_wav('sound/Jump.wav')
         self.jump_sound.set_volume(10000000)
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
