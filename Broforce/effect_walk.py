@@ -28,7 +28,7 @@ class Effect_walk:
         self.timer += self.velocity
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
 
-        if self.timer > + 10:
+        if self.timer > 10:
             game_world.remove_object(self)
 
         if self.x < 25 or self.x > 1600 - 25:

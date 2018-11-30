@@ -26,39 +26,35 @@ class Gun:
     image = None
     image_fire = None
 
-    def __init__(self, x=1280 // 2, y=720 // 2, state=IDLE_RIGHT):
+    def __init__(self, x=0, y=0, state=IDLE_RIGHT):
         if Gun.image == None:
             Gun.image = load_image('image/rambro_gun_animation.png')
-        if Gun.image_fire == None:
-            Gun.image_fire = load_image('image/rambro_gun_shot_animation.png')
+        # if Gun.image_fire == None:
+        #     Gun.image_fire = load_image('image/rambro_gun_shot_animation.png')
         self.x, self.y, self.state = x, y, state
         self.frame = 0
-        global gun_state
-        gun_state = state
 
     def draw(self):
-        if self.state == IDLE_RIGHT or self.state == JUMP_RIGHT:
+        if self.state == IDLE_RIGHT or self.state == JUMP_RIGHT or self.state == SHOT_RIGHT:
             self.image.clip_draw(int(self.frame) * w, h * 3, w, h, self.x, self.y, w * size, h * size)
-        elif self.state == IDLE_LEFT or self.state == JUMP_LEFT:
+        elif self.state == IDLE_LEFT or self.state == JUMP_LEFT or self.state == SHOT_LEFT:
             self.image.clip_draw(int(self.frame) * w, h * 2, w, h, self.x, self.y, w * size, h * size)
         elif self.state == WALK_RIGHT:
             self.image.clip_draw(int(self.frame) * w, h * 1, w, h, self.x, self.y, w * size, h * size)
         elif self.state == WALK_LEFT:
             self.image.clip_draw(int(self.frame) * w, h * 0, w, h, self.x, self.y, w * size, h * size)
-        elif self.state == SHOT_RIGHT:
-            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 1, 40, 22, self.x, self.y, w * size, h * size)
-        elif self.state == SHOT_LEFT:
-            self.image_fire.clip_draw(int(self.frame) * 40, 22 * 0, 40, 22, self.x, self.y, w * size, h * size)
+        # elif self.state == SHOT_RIGHT:
+        #     # self.image_fire.clip_draw(int(self.frame) * 40, 22 * 1, 40, 22, self.x, self.y, w * size, h * size)
+        # elif self.state == SHOT_LEFT:
+        #     self.image_fire.clip_draw(int(self.frame) * 40, 22 * 0, 40, 22, self.x, self.y, w * size, h * size)
 
     def update(self):
-        global gun_state
-        self.state = gun_state
         if self.state == IDLE_RIGHT or self.state == IDLE_LEFT:
-            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
+            self.frame = 0
         elif self.state == WALK_RIGHT or self.state == WALK_LEFT:
             self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         elif self.state == JUMP_RIGHT or self.state == JUMP_LEFT or self.state == SHOT_RIGHT or self.state == SHOT_LEFT:
-            self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+            self.frame = 0
 
     def set_info(self, x, y, state):
         self.x, self.y = x, y

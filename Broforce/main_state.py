@@ -17,6 +17,10 @@ boy = None
 back = None
 stage_one_back = None
 
+
+
+
+
 def enter():
     global boy, back, stage_one_back
     boy = Boy()

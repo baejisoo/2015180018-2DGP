@@ -18,9 +18,13 @@ class Bullet:
 
     def draw(self):
         self.image.draw(self.x, self.y, 14 * size, 7 * size)
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x += self.velocity
 
         if self.x < 25 or self.x > 1280 - 25:
             game_world.remove_object(self)
+
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10

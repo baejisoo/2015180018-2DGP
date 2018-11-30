@@ -6,7 +6,7 @@ import main_state
 import scroll_state
 
 pico2d.open_canvas(1280, 720, sync=True)
-game_framework.run(main_state)
+game_framework.run(scroll_state)
 #game_framework.run(start_state)
 
 pico2d.clear_canvas()
