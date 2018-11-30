@@ -3,7 +3,7 @@ from pico2d import *
 import game_framework
 
 
-from rambro import FreeBoy as Boy # import Boy class from rambro.py
+from boy import FreeBoy as Boy # import Boy class from boy.py
 
 # fill here
 from background import FixedTileBackground as Background

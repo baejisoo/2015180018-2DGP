@@ -38,7 +38,7 @@ if __name__ =='__main__':
 
     open_canvas(800, 600)
 
-    tile_set = load_tile_set('desert_tileset.json')
+    tile_set = load_tile_set('broforce_tileset_e100ff.json')
 
     for i in range(tile_set.tilecount):
         col = i % tile_set.columns

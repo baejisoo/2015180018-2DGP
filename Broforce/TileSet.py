@@ -38,9 +38,8 @@ if __name__ =='__main__':
 
     open_canvas(800, 600)
 
-    tile_set = load_tile_set('json/desert_tileset.json')
-    image = load_image('image/Back.png')
-    image.clip_draw_to_origin(0, 0, 1280, 720, 0, 0)
+    tile_set = load_tile_set('broforce_tileset_e100ff.json')
+
     for i in range(tile_set.tilecount):
         col = i % tile_set.columns
         row = i // tile_set.columns

@@ -7,7 +7,7 @@ import game_framework
 import game_world
 import title_state
 
-from rambro import Rambro
+from boy import Boy
 from mook import Mook
 from back import Back
 from stage_one_back import Stage_one_back
@@ -20,18 +20,18 @@ back = None
 stage_one_back = None
 
 def enter():
-    global rambro, mook, back, stage_one_back, ui
-    rambro = Rambro()
+    global boy, mook, back, stage_one_back, ui
+    boy = Boy()
     back = Back()
     stage_one_back = Stage_one_back()
     ui = Ui()
     game_world.add_object(back, 0)
     game_world.add_object(stage_one_back, 0)
     game_world.add_object(ui, 0)
-    game_world.add_object(rambro, 1)
+    game_world.add_object(boy, 1)
 
-    stage_one_back.set_center_object(rambro)
-    rambro.set_background(stage_one_back)
+    stage_one_back.set_center_object(boy)
+    boy.set_background(stage_one_back)
 
 def exit():
     game_world.clear()
@@ -52,7 +52,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
                 game_framework.quit()
         else:
-            rambro.handle_event(event)
+            boy.handle_event(event)
 
 
 def update():

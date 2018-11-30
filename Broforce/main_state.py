@@ -7,7 +7,7 @@ import game_framework
 import game_world
 import title_state
 
-from rambro import Boy
+from boy import Boy
 from back import Back
 from stage_one_back import Stage_one_back
 
