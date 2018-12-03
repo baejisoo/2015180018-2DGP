@@ -21,6 +21,9 @@ class Effect_walk:
         self.timer = 0
         self.frame = 0
 
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+
     def draw(self):
         self.image.clip_draw(int(self.frame) * w, 0, w, h, self.x, self.y, w * 5, h * 5)
 

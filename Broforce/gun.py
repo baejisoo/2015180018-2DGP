@@ -34,6 +34,9 @@ class Gun:
         self.x, self.y, self.state = x, y, state
         self.frame = 0
 
+    def get_bb(self):
+        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+
     def draw(self):
         if self.state == IDLE_RIGHT or self.state == JUMP_RIGHT or self.state == SHOT_RIGHT:
             self.image.clip_draw(int(self.frame) * w, h * 3, w, h, self.x, self.y, w * size, h * size)

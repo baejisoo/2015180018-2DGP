@@ -51,19 +51,34 @@ class IdleState:
 
     @staticmethod
     def enter(boy, event):
-        if event == RIGHT_DOWN:
+        if event == RIGHT_DOWN and boy.bIsLadder is False:
             boy.velocity += RUN_SPEED_PPS
-        elif event == LEFT_DOWN:
+            boy.bIsDown = False
+            boy.bIsUp = False
+
+        elif event == LEFT_DOWN and boy.bIsLadder is False:
             boy.velocity -= RUN_SPEED_PPS
-        elif event == RIGHT_UP:
+            boy.bIsDown = False
+            boy.bIsUp = False
+
+        elif event == RIGHT_UP and boy.bIsLadder is False:
             boy.velocity -= RUN_SPEED_PPS
-        elif event == LEFT_UP:
+            boy.bIsDown = False
+            boy.bIsUp = False
+
+        elif event == LEFT_UP and boy.bIsLadder is False:
             boy.velocity += RUN_SPEED_PPS
+            boy.bIsDown = False
+            boy.bIsUp = False
+
         elif event == UP_DOWN:
             boy.velocity += RUN_SPEED_PPS
+            boy.bIsUp = True
+            boy.bIsDown = False
         elif event == DOWN_DOWN:
             boy.velocity -= RUN_SPEED_PPS
-
+            boy.bIsDown = True
+            boy.bIsUp = False
         if boy.dir == 1:
             boy.gun_state = IDLE_RIGHT
         else:
@@ -78,6 +93,7 @@ class IdleState:
             else:
                 boy.gun_state = SHOT_LEFT
             boy.fire_bullet()
+            print(boy.dir)
         #el#if event == UP_DOWN:
         #    boy.y += 20
         #elif event == DOWN_DOWN:
@@ -105,21 +121,21 @@ class IdleState:
             boy.image.clip_draw(int(boy.frame) * w, h * IDLE_LEFT, w, h,
                                 cx, cy, w * size, h * size)
 
-
 class RunState:
 
     @staticmethod
     def enter(boy, event):
-        if event == RIGHT_DOWN:
+        if event == RIGHT_DOWN and boy.bIsLadder is False:
             boy.velocity += RUN_SPEED_PPS
-        elif event == LEFT_DOWN:
+        elif event == LEFT_DOWN and boy.bIsLadder is False:
             boy.velocity -= RUN_SPEED_PPS
-        elif event == RIGHT_UP:
+        elif event == RIGHT_UP and boy.bIsLadder is False:
             boy.velocity -= RUN_SPEED_PPS
-        elif event == LEFT_UP:
+        elif event == LEFT_UP and boy.bIsLadder is False:
             boy.velocity += RUN_SPEED_PPS
 
         boy.dir = clamp(-1, boy.velocity, 1)
+
         if boy.dir == 1:
             boy.gun_state = WALK_RIGHT
         else:
@@ -259,15 +275,19 @@ class Boy:
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
         self.jump_y = 0
+        self.bIsLadder = False
+        self.bIsUp = False
+        self.bIsDown = False
 
-    def offset(self):
-        x_left_offset = min(0, self.x - self.canvas_width // 2)
-        x_right_offset = max(0, self.x - self.bg.w + self.canvas_width // 2)
-        x_offset = x_left_offset + x_right_offset
-        y_bottom_offset = min(0, self.y - self.canvas_height // 2)
-        y_top_offset = max(0, self.y - self.bg.h + self.canvas_height // 2)
-        y_offset = y_bottom_offset + y_top_offset
-        return x_offset, y_offset
+    def __getstate__(self):
+        # fill here
+        state = {'x': self.x, 'y': self.y, 'dir': self.dir, 'cur_state': self.cur_state}
+        return state
+
+    def __setstate__(self, state):
+        # fill here
+        self.__init__()
+        self.__dict__.update(state)
 
     def get_bb(self):
         bx, by = self.x - self.bg.window_left, self.y - self.bg.window_bottom
@@ -281,7 +301,7 @@ class Boy:
     def equip_gun(self):
         global gun
         gun = Gun(self.x, self.y, self.gun_state)
-        game_world.add_object(gun, 1)
+        game_world.add_object(gun, 5)
 
     def update_gun(self):
         global gun
@@ -295,21 +315,22 @@ class Boy:
         game_world.remove_object(gun)
 
     def fire_bullet(self):
+        global bullet
         cx, cy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
         bullet = Bullet(cx, cy + self.jump_y - 7.0, self.dir * 10)
-        game_world.add_object(bullet, 1)
+        game_world.add_object(bullet, 3)
 
     def create_effect_walk(self):
         cx, cy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
         effect_walk = Effect_walk(cx, cy - 10, 1)
-        game_world.add_object(effect_walk, 1)
+        game_world.add_object(effect_walk, 5)
 
     def create_effect_jump(self):
         global effect_jump
         cx, cy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
 
         effect_jump = Effect_jump(cx, cy - 25, 1)
-        game_world.add_object(effect_jump, 1)
+        game_world.add_object(effect_jump, 5)
 
     def delete_effect_jump(self):
         global effect_jump
@@ -328,10 +349,12 @@ class Boy:
 
     def draw(self):
         self.cur_state.draw(self)
-        self.font.draw(60, 640, '(Time: %3.2f)' % get_time(), (255, 255, 0))
-        self.font.draw(60, 600, '(X: %d, Y: %d)' % (self.x, self.y), (255, 255, 0))
+        cx, cy = self.x - self.bg.window_left, self.y - self.bg.window_bottom
 
-        draw_rectangle(*self.get_bb())
+        self.font.draw(60, 640, '(Time: %3.2f)' % get_time(), (255, 255, 0))
+        #self.font.draw(60, 600, '(X: %d, Y: %d)' % (self.x, self.y), (255, 255, 0))
+
+        #draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
